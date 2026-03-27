@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Place Thing - Lobby + Scoreboard</title>
+  <style>
+  :root {
+    --bg:#0b1220;
+    --panel:#ffffff;
+    --soft:#eef6ff;
+    --primary:#2563eb;
+    --secondary:#14b8a6;
+    --warning:#ef4444;
+    --text:#111827;
+    --muted:#64748b;
+    --line:#dbe5f1;
+    --gold:#f59e0b;
+    --silver:#94a3b8;
+    --bronze:#b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0;
+    font-family: Segoe UI, Arial, sans-serif;
+    background: linear-gradient(135deg,#0b1220,#1f2937 60%,#172554);
+    color: var(--text);
+    min-height:100vh;
+  }
+  .wrap { max-width: 1380px; margin: 0 auto; padding: 22px; }
+  .topbar { color:#fff; margin-bottom: 16px; }
+  h1 { margin:0 0 6px; font-size: 2rem; }
+  .subtitle { color:#cbd5e1; margin:0; }
+  .grid { display:grid; grid-template-columns: 360px 1fr; gap:18px; align-items:start; }
+  .panel { background:var(--panel); border-radius:22px; box-shadow: 0 12px 34px rgba(0,0,0,.18); padding:18px; }
+  .panel h2 { margin:0 0 12px; font-size:1.2rem; }
+  .pill { display:inline-block; padding:6px 10px; border-radius:999px; background:#dbeafe; color:#1d4ed8; font-size:.85rem; font-weight:700; }
+  .muted { color:var(--muted); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button, select, input, textarea { font:inherit; border-radius:12px; border:1px solid var(--line); padding:10px 12px; }
+  button { background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:700; }
+  button.secondary { background:var(--secondary); }
+  button.ghost { background:#e5eefc; color:#0f172a; }
+  button.warn { background:var(--warning); }
+  button:disabled { opacity:.55; cursor:not-allowed; }
+  input, select, textarea { width:100%; }
+  .split { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .subpanel { background:#f8fafc; border:1px solid var(--line); border-radius:18px; padding:16px; }
+  .lobby-list, .active-list { display:grid; gap:8px; max-height: 360px; overflow:auto; padding-right:4px; }
+  .name-card { display:flex; justify-content:space-between; gap:10px; align-items:center; border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff; }
+  .name-card small { color:var(--muted); }
+  .mainboard { display:grid; gap:18px; }
+  .hero { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; }
+  .hero-box { background:linear-gradient(180deg,#f8fbff,#eef4ff); border:1px solid #dbeafe; border-radius:20px; padding:18px; text-align:center; min-height: 220px; display:flex; flex-direction:column; justify-content:center; }
+  .big { font-size:80px; line-height:1; font-weight:800; color:#2563eb; margin:10px 0; }
+  .timer { font-size:72px; line-height:1; font-weight:800; color:#ef4444; margin:10px 0; }
+  .status { min-height:24px; color:var(--muted); }
+  .pulse { animation: pulse .09s linear infinite; }
+  @keyframes pulse { 0%{transform:rotate(-1deg) scale(1)} 50%{transform:rotate(1deg) scale(1.04)} 100%{transform:rotate(-1deg) scale(1)} }
+  .round-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:10px; align-items:center; }
+  .table-wrap { overflow:auto; }
+  table { width:100%; border-collapse: collapse; min-width: 960px; }
+  th, td { border-bottom:1px solid var(--line); padding:10px 8px; text-align:left; vertical-align:top; }
+  th { position: sticky; top: 0; background:#f8fafc; z-index:1; }
+  td input[type='number'] { width:86px; }
+  .leaderboard { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; }
+  .leader { border-radius:18px; padding:16px; color:#fff; }
+  .gold { background:linear-gradient(135deg,#f59e0b,#d97706); }
+  .silver { background:linear-gradient(135deg,#94a3b8,#64748b); }
+  .bronze { background:linear-gradient(135deg,#b45309,#92400e); }
+  .score { font-size:2rem; font-weight:800; margin-top:6px; }
+  .tiny { font-size:.9rem; color:var(--muted); }
+  .notice { background:#ecfeff; border:1px solid #a5f3fc; color:#0f172a; border-radius:14px; padding:12px 14px; }
+  .footer { color:#cbd5e1; margin-top:14px; font-size:.95rem; }
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns:1fr; }
+    .hero { grid-template-columns:1fr; }
+    .split { grid-template-columns:1fr; }
+    .leaderboard { grid-template-columns:1fr; }
+    .round-grid { grid-template-columns: 1fr 1fr; }
+    .big { font-size:64px; }
+    .timer { font-size:56px; }
+  }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1>Name • Place • Thing — Lobby + Winner Tracker</h1>
+      <p class="subtitle">Join by name, start rounds with a spin + timer, enter answers, score them, and automatically find the winner.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <h2>Lobby</h2>
+        <div class="notice" style="margin-bottom:12px;">
+          This file is a <b>single-browser host version</b>. It supports join-by-name and winner tracking in one screen. To let everyone join from separate devices with live sync, this same design would need to be hosted with a small online backend.
+        </div>
+        <div class="subpanel" style="margin-bottom:14px;">
+          <div class="row" style="align-items:flex-end;">
+            <div style="flex:1 1 100%;">
+              <label class="tiny">Join with participant name</label>
+              <select id="joinSelect"></select>
+            </div>
+            <button id="joinBtn">Join</button>
+          </div>
+          <div class="tiny" style="margin-top:8px;">Allowed names loaded: 35</div>
+        </div>
+        <div class="split">
+          <div class="subpanel">
+            <h3 style="margin-top:0;">Available names</h3>
+            <input id="searchAvailable" placeholder="Search available names..." />
+            <div class="lobby-list" id="availableList"></div>
+          </div>
+          <div class="subpanel">
+            <h3 style="margin-top:0;">Active players</h3>
+            <div class="row" style="margin-bottom:10px;">
+              <span class="pill" id="activeCount">0 joined</span>
+              <button id="clearPlayersBtn" class="ghost">Clear Players</button>
+            </div>
+            <div class="active-list" id="activeList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mainboard">
+        <div class="panel">
+          <h2>Game Control</h2>
+          <div class="row" style="margin-bottom:14px;">
+            <div style="min-width:160px;">
+              <label class="tiny">Round time</label>
+              <select id="timeSelect">
+                <option value="30">30 seconds</option>
+                <option value="45">45 seconds</option>
+                <option value="60" selected>60 seconds</option>
+                <option value="90">90 seconds</option>
+                <option value="120">120 seconds</option>
+              </select>
+            </div>
+            <div style="min-width:120px;">
+              <label class="tiny">Round number</label>
+              <input id="roundNumber" type="number" min="1" value="1" />
+            </div>
+            <div style="flex:1 1 260px;">
+              <label class="tiny">Round note (optional)</label>
+              <input id="roundNote" placeholder="Example: Final round / bonus round" />
+            </div>
+          </div>
+          <div class="hero">
+            <div class="hero-box">
+              <div class="muted">Letter Spinner</div>
+              <div id="letter" class="big">?</div>
+              <div class="status" id="spinStatus">Spin a new letter for the round</div>
+            </div>
+            <div class="hero-box">
+              <div class="muted">Timer</div>
+              <div id="timer" class="timer">60</div>
+              <div class="status" id="timerStatus">Timer ready</div>
+            </div>
+            <div class="hero-box">
+              <div class="muted">Actions</div>
+              <div class="row" style="justify-content:center; margin-top:10px;">
+                <button id="spinBtn">Spin</button>
+                <button id="roundBtn" class="secondary">Spin + Start</button>
+                <button id="pauseBtn" class="ghost">Pause</button>
+                <button id="resetBtn" class="ghost">Reset</button>
+              </div>
+              <div class="status" style="margin-top:12px;">Use <b>Spin + Start</b> for a normal round.</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+            <div>
+              <h2 style="margin:0">Round Answers + Scoring</h2>
+              <div class="muted">Host enters answers or points for each joined player.</div>
+            </div>
+            <div class="row">
+              <button id="autoScoreBtn" class="ghost">Quick Score 10/5/0</button>
+              <button id="clearRoundBtn" class="warn">Clear Round Inputs</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Name</th>
+                  <th>Place</th>
+                  <th>Thing</th>
+                  <th>Total (auto)</th>
+                  <th>Bonus</th>
+                  <th>Round Score</th>
+                  <th>Add to Leaderboard</th>
+                </tr>
+              </thead>
+              <tbody id="scoreTable"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+            <div>
+              <h2 style="margin:0">Leaderboard</h2>
+              <div class="muted">Automatically ranks players and shows current winner.</div>
+            </div>
+            <div class="row">
+              <button id="recalcBtn" class="ghost">Recalculate</button>
+              <button id="exportBtn" class="ghost">Export CSV</button>
+              <button id="resetBoardBtn" class="warn">Reset Leaderboard</button>
+            </div>
+          </div>
+          <div class="leaderboard" id="podium"></div>
+          <div class="table-wrap" style="margin-top:14px;">
+            <table style="min-width:700px;">
+              <thead>
+                <tr><th>Rank</th><th>Player</th><th>Total Score</th><th>Rounds Played</th><th>Average</th></tr>
+              </thead>
+              <tbody id="leaderTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">If you want true multi-device join from one shared link, this prototype is the exact base to host on SharePoint / Azure Static Web Apps / any internal web server with live storage added.</div>
+  </div>
+<script>
+const allowed = ["ABINAYA FREDRICK", "Adhiayyappan Sampathkumar", "Athira Udayakumar", "Gowri Abhinaya Kalyan", "Jahnavi Tirumalasetty", "Jeganraj Senthilkumaran", "Krubasankar Umapathy", "Micheal Joseph Vaz S", "Mohamed Fazil S", "Mukesh kanna", "Nandhini J", "Navya P.", "Rajaraman Palaniappan", "Ranjith kumar", "Ratchagaraja Dhairiyasamy", "Sibi Sivavadivelu", "SIDDHARTH VIJAYAKUMAR", "Sivasubramaniyan s", "Sruthi Selvan", "Tamil M", "Ahmeddun Akbar Savanur", "Aparna P", "Arathi Sagayri", "Kavitha A O", "KOTHANDA RAJ IYAPPAN", "Megha Konana Manjunath", "PRAVIN JOSEPH", "Prem Kumar S", "Sagar Adithya Kumar", "Santhosh Kumar Bathrabagu", "Sharan Vottigunta", "Sheetal Goyal", "Siva Kumar Venkatachalam", "Swathi R", "Vigneshwaran G"];
+const state = {
+  activePlayers: [],
+  scores: {},
+  currentLetter: '?',
+  usedLetters: new Set(),
+  timerHandle: null,
+  timeLeft: 60,
+  paused: false,
+};
+const el = id => document.getElementById(id);
+const joinSelect = el('joinSelect');
+const availableList = el('availableList');
+const activeList = el('activeList');
+const scoreTable = el('scoreTable');
+const leaderTable = el('leaderTable');
+const podium = el('podium');
+const timeSelect = el('timeSelect');
+const roundNumber = el('roundNumber');
+const searchAvailable = el('searchAvailable');
+function initScores() {
+  allowed.forEach(name => {
+    if (!state.scores[name]) state.scores[name] = { total: 0, rounds: 0 };
+  });
+}
+function refreshJoinSelect() {
+  const available = allowed.filter(n => !state.activePlayers.includes(n));
+  joinSelect.innerHTML = available.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  if (!available.length) joinSelect.innerHTML = '<option>No more available names</option>';
+}
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function renderAvailable(filter='') {
+  const q = filter.trim().toLowerCase();
+  const names = allowed.filter(n => !state.activePlayers.includes(n) && n.toLowerCase().includes(q));
+  availableList.innerHTML = names.map(name => `
+    <div class="name-card">
+      <div><div>${escapeHtml(name)}</div><small>Available to join</small></div>
+      <button onclick="joinPlayer('${encodeURIComponent(name)}')">Join</button>
+    </div>`).join('') || '<div class="name-card"><div>No matching available names</div></div>';
+}
+function renderActive() {
+  el('activeCount').textContent = `${state.activePlayers.length} joined`;
+  activeList.innerHTML = state.activePlayers.map((name, idx) => `
+    <div class="name-card">
+      <div><div>${escapeHtml(name)}</div><small>Player #${idx+1}</small></div>
+      <button class="ghost" onclick="removePlayer('${encodeURIComponent(name)}')">Remove</button>
+    </div>`).join('') || '<div class="name-card"><div>No players joined yet</div></div>';
+}
+function renderScoreTable() {
+  scoreTable.innerHTML = state.activePlayers.map(name => `
+    <tr data-player="${escapeHtml(name)}">
+      <td><b>${escapeHtml(name)}</b></td>
+      <td><input placeholder="Name answer" class="ans ans-name" data-player="${escapeHtml(name)}" /></td>
+      <td><input placeholder="Place answer" class="ans ans-place" data-player="${escapeHtml(name)}" /></td>
+      <td><input placeholder="Thing answer" class="ans ans-thing" data-player="${escapeHtml(name)}" /></td>
+      <td><input type="number" value="0" class="autoTotal" data-player="${escapeHtml(name)}" readonly /></td>
+      <td><input type="number" value="0" class="bonus" data-player="${escapeHtml(name)}" min="0" max="50" /></td>
+      <td><input type="number" value="0" class="roundScore" data-player="${escapeHtml(name)}" readonly /></td>
+      <td><button onclick="commitScore('${encodeURIComponent(name)}')">Add Score</button></td>
+    </tr>
+    `).join('') || '<tr><td colspan="8" class="muted">No players joined yet</td></tr>';
+  bindScoringInputs();
+}
+function renderLeaderboard() {
+  const rows = allowed
+    .map(name => {
+      const s = state.scores[name] || {total:0, rounds:0};
+      return { name, total: s.total, rounds: s.rounds, avg: s.rounds ? (s.total / s.rounds) : 0 };
+    })
+    .filter(r => r.total > 0 || r.rounds > 0)
+    .sort((a,b) => b.total - a.total || b.avg - a.avg || a.name.localeCompare(b.name));
+  const top = [rows[0], rows[1], rows[2]].filter(Boolean);
+  const classes = ['gold', 'silver', 'bronze'];
+  const titles = ['Winner', 'Runner-up', 'Third place'];
+  podium.innerHTML = top.map((r,i) => `
+    <div class="leader ${classes[i]}">
+      <div>${titles[i]}</div>
+      <div style="font-size:1.1rem; font-weight:700; margin-top:8px;">${escapeHtml(r.name)}</div>
+      <div class="score">${r.total}</div>
+      <div>Rounds: ${r.rounds} • Avg: ${r.avg.toFixed(1)}</div>
+    </div>
+    `).join('') || '<div class="notice">No scores yet — add round scores to find the winner.</div>';
+  leaderTable.innerHTML = rows.map((r,i) => `
+    <tr>
+      <td>#${i+1}</td>
+      <td>${escapeHtml(r.name)}</td>
+      <td><b>${r.total}</b></td>
+      <td>${r.rounds}</td>
+      <td>${r.avg.toFixed(1)}</td>
+    </tr>
+    `).join('') || '<tr><td colspan="5" class="muted">No leaderboard data yet</td></tr>';
+}
+function joinPlayer(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  if (!allowed.includes(name)) return;
+  if (state.activePlayers.includes(name)) return;
+  state.activePlayers.push(name);
+  refreshAll();
+}
+window.joinPlayer = joinPlayer;
+function removePlayer(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  state.activePlayers = state.activePlayers.filter(n => n !== name);
+  refreshAll();
+}
+window.removePlayer = removePlayer;
+function refreshAll() {
+  refreshJoinSelect();
+  renderAvailable(searchAvailable.value || '');
+  renderActive();
+  renderScoreTable();
+  renderLeaderboard();
+}
+function bindScoringInputs() {
+  document.querySelectorAll('.ans, .bonus').forEach(inp => {
+    inp.addEventListener('input', () => updateRowScore(inp.dataset.player));
+  });
+}
+function getRow(player) {
+  return [...scoreTable.querySelectorAll('tr')].find(tr => tr.dataset.player === player);
+}
+function startsWithLetter(text, letter) {
+  if (!text || !letter || letter === '?') return false;
+  return text.trim().charAt(0).toUpperCase() === letter.toUpperCase();
+}
+function uniqueAmong(values, currentValue) {
+  const norm = currentValue.trim().toLowerCase();
+  if (!norm) return false;
+  const count = values.map(v => v.trim().toLowerCase()).filter(v => v === norm).length;
+  return count === 1;
+}
+function updateRowScore(player) {
+  const row = getRow(player);
+  if (!row) return;
+  const nameAns = row.querySelector('.ans-name').value;
+  const placeAns = row.querySelector('.ans-place').value;
+  const thingAns = row.querySelector('.ans-thing').value;
+  const bonus = parseInt(row.querySelector('.bonus').value || '0', 10) || 0;
+  const letter = state.currentLetter;
+  const allName = [...document.querySelectorAll('.ans-name')].map(x => x.value || '');
+  const allPlace = [...document.querySelectorAll('.ans-place')].map(x => x.value || '');
+  const allThing = [...document.querySelectorAll('.ans-thing')].map(x => x.value || '');
+  function scoreField(value, allValues) {
+    if (!value.trim()) return 0;
+    if (!startsWithLetter(value, letter)) return 0;
+    return uniqueAmong(allValues, value) ? 10 : 5;
+  }
+  const total = scoreField(nameAns, allName) + scoreField(placeAns, allPlace) + scoreField(thingAns, allThing);
+  row.querySelector('.autoTotal').value = total;
+  row.querySelector('.roundScore').value = total + bonus;
+}
+function commitScore(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  const row = getRow(name);
+  if (!row) return;
+  updateRowScore(name);
+  const score = parseInt(row.querySelector('.roundScore').value || '0', 10) || 0;
+  state.scores[name].total += score;
+  state.scores[name].rounds += 1;
+  renderLeaderboard();
+}
+window.commitScore = commitScore;
+function clearRoundInputs() {
+  document.querySelectorAll('.ans').forEach(i => i.value = '');
+  document.querySelectorAll('.bonus').forEach(i => i.value = '0');
+  document.querySelectorAll('.autoTotal').forEach(i => i.value = '0');
+  document.querySelectorAll('.roundScore').forEach(i => i.value = '0');
+}
+function exportCsv() {
+  const rows = allowed.map(name => {
+    const s = state.scores[name] || {total:0, rounds:0};
+    return [name, s.total, s.rounds, s.rounds ? (s.total / s.rounds).toFixed(1) : '0.0'];
+  }).filter(r => r[1] > 0 || r[2] > 0);
+  const csv = [['Player','Total Score','Rounds Played','Average'], ...rows]
+    .map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'name_place_thing_leaderboard.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function randomLetter() {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const available = letters.filter(l => !state.usedLetters.has(l));
+  if (!available.length) state.usedLetters.clear();
+  const pool = letters.filter(l => !state.usedLetters.has(l));
+  const chosen = pool[Math.floor(Math.random() * pool.length)];
+  state.usedLetters.add(chosen);
+  return chosen;
+}
+function spinLetter() {
+  const target = el('letter');
+  let steps = 18;
+  target.classList.add('pulse');
+  el('spinStatus').textContent = 'Spinning...';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const handle = setInterval(() => {
+    target.textContent = letters[Math.floor(Math.random() * letters.length)];
+    steps -= 1;
+    if (steps <= 0) {
+      clearInterval(handle);
+      state.currentLetter = randomLetter();
+      target.textContent = state.currentLetter;
+      target.classList.remove('pulse');
+      el('spinStatus').textContent = `Round letter: ${state.currentLetter}`;
+      document.querySelectorAll('.ans').forEach(inp => updateRowScore(inp.dataset.player));
+    }
+  }, 80);
+}
+function setTimerDisplay() { el('timer').textContent = state.timeLeft; }
+function stopTimer() { if (state.timerHandle) clearInterval(state.timerHandle); state.timerHandle = null; }
+function startTimer() {
+  stopTimer();
+  state.paused = false;
+  state.timeLeft = parseInt(timeSelect.value, 10);
+  setTimerDisplay();
+  el('timerStatus').textContent = 'Round running';
+  state.timerHandle = setInterval(() => {
+    if (state.paused) return;
+    state.timeLeft -= 1;
+    setTimerDisplay();
+    if (state.timeLeft <= 0) {
+      stopTimer();
+      el('timerStatus').textContent = 'Time is up!';
+      alert('Time is up! Scoring can begin.');
+    }
+  }, 1000);
+}
+function resetRound() {
+  stopTimer();
+  state.paused = false;
+  state.timeLeft = parseInt(timeSelect.value, 10);
+  setTimerDisplay();
+  el('timerStatus').textContent = 'Timer ready';
+  el('letter').textContent = '?';
+  state.currentLetter = '?';
+  el('spinStatus').textContent = 'Spin a new letter for the round';
+  clearRoundInputs();
+  el('pauseBtn').textContent = 'Pause';
+}
+function quickScore() {
+  document.querySelectorAll('.ans-name, .ans-place, .ans-thing, .bonus').forEach(inp => updateRowScore(inp.dataset.player));
+}
+el('joinBtn').addEventListener('click', () => {
+  if (!joinSelect.value || joinSelect.value === 'No more available names') return;
+  joinPlayer(encodeURIComponent(joinSelect.value));
+});
+el('clearPlayersBtn').addEventListener('click', () => { state.activePlayers = []; refreshAll(); });
+el('spinBtn').addEventListener('click', spinLetter);
+el('roundBtn').addEventListener('click', () => { spinLetter(); setTimeout(startTimer, 1500); });
+el('pauseBtn').addEventListener('click', () => {
+  if (!state.timerHandle) return;
+  state.paused = !state.paused;
+  el('pauseBtn').textContent = state.paused ? 'Resume' : 'Pause';
+  el('timerStatus').textContent = state.paused ? 'Paused' : 'Round running';
+});
+el('resetBtn').addEventListener('click', resetRound);
+el('autoScoreBtn').addEventListener('click', quickScore);
+el('clearRoundBtn').addEventListener('click', clearRoundInputs);
+el('recalcBtn').addEventListener('click', renderLeaderboard);
+el('exportBtn').addEventListener('click', exportCsv);
+el('resetBoardBtn').addEventListener('click', () => {
+  allowed.forEach(n => state.scores[n] = { total:0, rounds:0 });
+  renderLeaderboard();
+});
+timeSelect.addEventListener('change', () => { if (!state.timerHandle) { state.timeLeft = parseInt(timeSelect.value,10); setTimerDisplay(); } });
+searchAvailable.addEventListener('input', e => renderAvailable(e.target.value));
+initScores();
+state.timeLeft = parseInt(timeSelect.value,10);
+setTimerDisplay();
+refreshAll();
+</script>
+</body>
+</html>
