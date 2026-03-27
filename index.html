@@ -3,131 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Name Place Thing - Lobby + Scoreboard</title>
+  <title>🎮 NPTA Multiplayer Host Start</title>
   <style>
-  :root {
-    --bg:#0b1220;
-    --panel:#ffffff;
-    --soft:#eef6ff;
-    --primary:#2563eb;
-    --secondary:#14b8a6;
-    --warning:#ef4444;
-    --text:#111827;
-    --muted:#64748b;
-    --line:#dbe5f1;
-    --gold:#f59e0b;
-    --silver:#94a3b8;
-    --bronze:#b45309;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin:0;
-    font-family: Segoe UI, Arial, sans-serif;
-    background: linear-gradient(135deg,#0b1220,#1f2937 60%,#172554);
-    color: var(--text);
-    min-height:100vh;
-  }
-  .wrap { max-width: 1380px; margin: 0 auto; padding: 22px; }
-  .topbar { color:#fff; margin-bottom: 16px; }
-  h1 { margin:0 0 6px; font-size: 2rem; }
-  .subtitle { color:#cbd5e1; margin:0; }
-  .grid { display:grid; grid-template-columns: 360px 1fr; gap:18px; align-items:start; }
-  .panel { background:var(--panel); border-radius:22px; box-shadow: 0 12px 34px rgba(0,0,0,.18); padding:18px; }
-  .panel h2 { margin:0 0 12px; font-size:1.2rem; }
-  .pill { display:inline-block; padding:6px 10px; border-radius:999px; background:#dbeafe; color:#1d4ed8; font-size:.85rem; font-weight:700; }
-  .muted { color:var(--muted); }
-  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  button, select, input, textarea { font:inherit; border-radius:12px; border:1px solid var(--line); padding:10px 12px; }
-  button { background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:700; }
-  button.secondary { background:var(--secondary); }
-  button.ghost { background:#e5eefc; color:#0f172a; }
-  button.warn { background:var(--warning); }
-  button:disabled { opacity:.55; cursor:not-allowed; }
-  input, select, textarea { width:100%; }
-  .split { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .subpanel { background:#f8fafc; border:1px solid var(--line); border-radius:18px; padding:16px; }
-  .lobby-list, .active-list { display:grid; gap:8px; max-height: 360px; overflow:auto; padding-right:4px; }
-  .name-card { display:flex; justify-content:space-between; gap:10px; align-items:center; border:1px solid var(--line); border-radius:14px; padding:10px 12px; background:#fff; }
-  .name-card small { color:var(--muted); }
-  .mainboard { display:grid; gap:18px; }
-  .hero { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; }
-  .hero-box { background:linear-gradient(180deg,#f8fbff,#eef4ff); border:1px solid #dbeafe; border-radius:20px; padding:18px; text-align:center; min-height: 220px; display:flex; flex-direction:column; justify-content:center; }
-  .big { font-size:80px; line-height:1; font-weight:800; color:#2563eb; margin:10px 0; }
-  .timer { font-size:72px; line-height:1; font-weight:800; color:#ef4444; margin:10px 0; }
-  .status { min-height:24px; color:var(--muted); }
-  .pulse { animation: pulse .09s linear infinite; }
-  @keyframes pulse { 0%{transform:rotate(-1deg) scale(1)} 50%{transform:rotate(1deg) scale(1.04)} 100%{transform:rotate(-1deg) scale(1)} }
-  .round-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:10px; align-items:center; }
-  .table-wrap { overflow:auto; }
-  table { width:100%; border-collapse: collapse; min-width: 960px; }
-  th, td { border-bottom:1px solid var(--line); padding:10px 8px; text-align:left; vertical-align:top; }
-  th { position: sticky; top: 0; background:#f8fafc; z-index:1; }
-  td input[type='number'] { width:86px; }
-  .leaderboard { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; }
-  .leader { border-radius:18px; padding:16px; color:#fff; }
-  .gold { background:linear-gradient(135deg,#f59e0b,#d97706); }
-  .silver { background:linear-gradient(135deg,#94a3b8,#64748b); }
-  .bronze { background:linear-gradient(135deg,#b45309,#92400e); }
-  .score { font-size:2rem; font-weight:800; margin-top:6px; }
-  .tiny { font-size:.9rem; color:var(--muted); }
-  .notice { background:#ecfeff; border:1px solid #a5f3fc; color:#0f172a; border-radius:14px; padding:12px 14px; }
-  .footer { color:#cbd5e1; margin-top:14px; font-size:.95rem; }
-  @media (max-width: 1100px) {
-    .grid { grid-template-columns:1fr; }
-    .hero { grid-template-columns:1fr; }
-    .split { grid-template-columns:1fr; }
-    .leaderboard { grid-template-columns:1fr; }
-    .round-grid { grid-template-columns: 1fr 1fr; }
-    .big { font-size:64px; }
-    .timer { font-size:56px; }
-  }
+    :root{
+      --bg:#0b1220; --panel:#ffffff; --soft:#eff6ff; --line:#dbe5f1; --text:#0f172a;
+      --muted:#64748b; --primary:#2563eb; --secondary:#14b8a6; --danger:#ef4444;
+      --success:#16a34a; --amber:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#0b1220,#1f2937 60%,#172554);color:var(--text)}
+    .wrap{max-width:1500px;margin:0 auto;padding:20px}
+    .topbar{color:#fff;margin-bottom:16px}
+    h1{margin:0 0 6px;font-size:2rem}
+    .subtitle{margin:0;color:#cbd5e1}
+    .grid{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
+    .panel{background:var(--panel);border-radius:22px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:18px}
+    .panel h2{margin:0 0 12px;font-size:1.18rem}
+    .subtle{color:var(--muted)}
+    .notice{background:#ecfeff;border:1px solid #a5f3fc;padding:12px 14px;border-radius:14px;color:#0f172a;margin-bottom:12px}
+    .warning{background:#fff7ed;border:1px solid #fdba74;padding:12px 14px;border-radius:14px;color:#7c2d12;margin-bottom:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .stack{display:grid;gap:12px}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{font-size:.9rem;color:var(--muted);display:block;margin-bottom:6px}
+    input,select,textarea,button{font:inherit;border-radius:12px;padding:10px 12px}
+    input,select,textarea{width:100%;border:1px solid var(--line)}
+    button{border:none;cursor:pointer;font-weight:700;background:var(--primary);color:#fff}
+    button.secondary{background:var(--secondary)}
+    button.ghost{background:#e5eefc;color:#0f172a}
+    button.warn{background:var(--danger)}
+    button.ok{background:var(--success)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .pill{display:inline-block;background:#dbeafe;color:#1d4ed8;padding:6px 10px;border-radius:999px;font-size:.84rem;font-weight:700}
+    .pill.ok{background:#dcfce7;color:#166534}.pill.warn{background:#fef3c7;color:#92400e}
+    .card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px}
+    .players{display:grid;gap:8px;max-height:260px;overflow:auto}
+    .player-row{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px}
+    .mainboard{display:grid;gap:16px}
+    .hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .hero-box{background:linear-gradient(180deg,#f8fbff,#eef4ff);border:1px solid #dbeafe;border-radius:20px;padding:18px;text-align:center;min-height:205px;display:flex;flex-direction:column;justify-content:center}
+    .big{font-size:80px;line-height:1;font-weight:800;color:#2563eb;margin:8px 0}.timer{font-size:72px;color:#ef4444;line-height:1;font-weight:800;margin:8px 0}
+    .status{min-height:24px;color:var(--muted)}
+    .pulse{animation:pulse .09s linear infinite}
+    @keyframes pulse{0%{transform:rotate(-1deg) scale(1)}50%{transform:rotate(1deg) scale(1.04)}100%{transform:rotate(-1deg) scale(1)}}
+    table{width:100%;border-collapse:collapse;min-width:1020px} th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top} th{position:sticky;top:0;background:#f8fafc;z-index:1;white-space:nowrap}
+    .table-wrap{overflow:auto}
+    .leaderboard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .leader{border-radius:18px;padding:16px;color:#fff}
+    .gold{background:linear-gradient(135deg,#f59e0b,#d97706)} .silver{background:linear-gradient(135deg,#94a3b8,#64748b)} .bronze{background:linear-gradient(135deg,#b45309,#92400e)}
+    .score{font-size:2rem;font-weight:800;margin-top:6px}
+    .tiny{font-size:.85rem;color:var(--muted)}
+    .kbd{padding:2px 8px;border-radius:999px;background:#e2e8f0;color:#334155;font-size:.82rem}
+    .hidden{display:none !important}
+    .footer{color:#cbd5e1;margin-top:14px;font-size:.95rem}
+    @media (max-width:1150px){.grid{grid-template-columns:1fr}.hero,.split,.leaderboard{grid-template-columns:1fr}.big{font-size:64px}.timer{font-size:56px}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <h1>Name • Place • Thing — Lobby + Winner Tracker</h1>
-      <p class="subtitle">Join by name, start rounds with a spin + timer, enter answers, score them, and automatically find the winner.</p>
+      <h1>🎮 Name • Place • Thing • Animal — Multiplayer Host Start</h1>
+      <p class="subtitle">Players join the room first. Host starts the round. Everyone gets the same letter and timer at the same time.</p>
     </div>
+
     <div class="grid">
       <div class="panel">
-        <h2>Lobby</h2>
-        <div class="notice" style="margin-bottom:12px;">
-          This file is a <b>single-browser host version</b>. It supports join-by-name and winner tracking in one screen. To let everyone join from separate devices with live sync, this same design would need to be hosted with a small online backend.
-        </div>
-        <div class="subpanel" style="margin-bottom:14px;">
-          <div class="row" style="align-items:flex-end;">
-            <div style="flex:1 1 100%;">
-              <label class="tiny">Join with participant name</label>
-              <select id="joinSelect"></select>
+        <h2>🚪 Join / Host Room</h2>
+        <div id="backendNotice" class="warning"></div>
+        <div class="stack">
+          <div>
+            <label>🔐 Room ID</label>
+            <input id="roomId" value="TEAMGAME" maxlength="30" placeholder="Example: TEAMGAME" />
+          </div>
+          <div class="split">
+            <div>
+              <label>👤 Role</label>
+              <select id="roleSelect">
+                <option value="player">Player</option>
+                <option value="host">Host (Ratchagaraja)</option>
+              </select>
             </div>
-            <button id="joinBtn">Join</button>
-          </div>
-          <div class="tiny" style="margin-top:8px;">Allowed names loaded: 35</div>
-        </div>
-        <div class="split">
-          <div class="subpanel">
-            <h3 style="margin-top:0;">Available names</h3>
-            <input id="searchAvailable" placeholder="Search available names..." />
-            <div class="lobby-list" id="availableList"></div>
-          </div>
-          <div class="subpanel">
-            <h3 style="margin-top:0;">Active players</h3>
-            <div class="row" style="margin-bottom:10px;">
-              <span class="pill" id="activeCount">0 joined</span>
-              <button id="clearPlayersBtn" class="ghost">Clear Players</button>
+            <div>
+              <label>🙋 Name</label>
+              <select id="nameSelect"></select>
             </div>
-            <div class="active-list" id="activeList"></div>
+          </div>
+          <div class="row">
+            <button id="joinRoomBtn">Enter Room</button>
+            <button id="leaveRoomBtn" class="ghost">Leave</button>
           </div>
         </div>
-      </div>
-      <div class="mainboard">
-        <div class="panel">
-          <h2>Game Control</h2>
-          <div class="row" style="margin-bottom:14px;">
-            <div style="min-width:160px;">
-              <label class="tiny">Round time</label>
-              <select id="timeSelect">
+
+        <div style="margin-top:14px" class="card">
+          <div class="row" style="justify-content:space-between; margin-bottom:8px;">
+            <div>
+              <div style="font-weight:700">Room Status</div>
+              <div id="roomMeta" class="tiny">Not connected</div>
+            </div>
+            <span id="phasePill" class="pill warn">Lobby</span>
+          </div>
+          <div class="players" id="playersList"></div>
+        </div>
+
+        <div id="hostControls" class="card hidden" style="margin-top:14px">
+          <div style="font-weight:700; margin-bottom:8px;">🎛️ Host Controls</div>
+          <div class="split">
+            <div>
+              <label>⏱️ Round time</label>
+              <select id="hostRoundTime">
                 <option value="30">30 seconds</option>
                 <option value="45">45 seconds</option>
                 <option value="60" selected>60 seconds</option>
@@ -135,84 +118,117 @@
                 <option value="120">120 seconds</option>
               </select>
             </div>
-            <div style="min-width:120px;">
-              <label class="tiny">Round number</label>
-              <input id="roundNumber" type="number" min="1" value="1" />
-            </div>
-            <div style="flex:1 1 260px;">
-              <label class="tiny">Round note (optional)</label>
-              <input id="roundNote" placeholder="Example: Final round / bonus round" />
+            <div>
+              <label>🔢 Round number</label>
+              <input id="hostRoundNumber" type="number" min="1" value="1" />
             </div>
           </div>
+          <div style="margin-top:10px">
+            <label>📝 Round note (optional)</label>
+            <input id="hostRoundNote" placeholder="Example: final round / bonus round" />
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button id="startRoundBtn" class="secondary">🚀 Start Round</button>
+            <button id="endRoundBtn" class="ghost">✅ End & Score</button>
+            <button id="resetRoomBtn" class="warn">♻️ Reset Room</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mainboard">
+        <div class="panel">
           <div class="hero">
             <div class="hero-box">
-              <div class="muted">Letter Spinner</div>
-              <div id="letter" class="big">?</div>
-              <div class="status" id="spinStatus">Spin a new letter for the round</div>
+              <div class="subtle">🔤 Letter</div>
+              <div id="letterBox" class="big">?</div>
+              <div id="letterStatus" class="status">Host will start the game</div>
             </div>
             <div class="hero-box">
-              <div class="muted">Timer</div>
-              <div id="timer" class="timer">60</div>
-              <div class="status" id="timerStatus">Timer ready</div>
+              <div class="subtle">⏳ Timer</div>
+              <div id="timerBox" class="timer">--</div>
+              <div id="timerStatus" class="status">Waiting in lobby</div>
             </div>
             <div class="hero-box">
-              <div class="muted">Actions</div>
-              <div class="row" style="justify-content:center; margin-top:10px;">
-                <button id="spinBtn">Spin</button>
-                <button id="roundBtn" class="secondary">Spin + Start</button>
-                <button id="pauseBtn" class="ghost">Pause</button>
-                <button id="resetBtn" class="ghost">Reset</button>
-              </div>
-              <div class="status" style="margin-top:12px;">Use <b>Spin + Start</b> for a normal round.</div>
+              <div class="subtle">📡 Sync</div>
+              <div id="syncModeBox" style="font-size:1.4rem;font-weight:800;margin:8px 0">Broadcast</div>
+              <div id="syncModeDesc" class="status"></div>
             </div>
           </div>
         </div>
+
         <div class="panel">
           <div class="row" style="justify-content:space-between; margin-bottom:12px;">
             <div>
-              <h2 style="margin:0">Round Answers + Scoring</h2>
-              <div class="muted">Host enters answers or points for each joined player.</div>
+              <h2 style="margin:0">🧾 Your Answers</h2>
+              <div class="subtle">All players get the same start time, letter, and timer. Save answers before time ends.</div>
             </div>
             <div class="row">
-              <button id="autoScoreBtn" class="ghost">Quick Score 10/5/0</button>
-              <button id="clearRoundBtn" class="warn">Clear Round Inputs</button>
+              <span id="submitStatus" class="pill">Not submitted</span>
+              <button id="saveAnswersBtn">💾 Save Answers</button>
             </div>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Player</th>
-                  <th>Name</th>
-                  <th>Place</th>
-                  <th>Thing</th>
-                  <th>Total (auto)</th>
-                  <th>Bonus</th>
-                  <th>Round Score</th>
-                  <th>Add to Leaderboard</th>
+                  <th>🙍 Name</th>
+                  <th>📍 Place</th>
+                  <th>📦 Thing</th>
+                  <th>🐾 Animal</th>
                 </tr>
               </thead>
-              <tbody id="scoreTable"></tbody>
+              <tbody>
+                <tr>
+                  <td><input id="ansName" placeholder="Name answer" /></td>
+                  <td><input id="ansPlace" placeholder="Place answer" /></td>
+                  <td><input id="ansThing" placeholder="Thing answer" /></td>
+                  <td><input id="ansAnimal" placeholder="Animal answer" /></td>
+                </tr>
+              </tbody>
             </table>
           </div>
+          <div class="tiny" style="margin-top:8px">Scoring is automatic after the round: unique valid answer = 10, duplicate valid answer = 5, wrong/blank = 0.</div>
         </div>
+
         <div class="panel">
           <div class="row" style="justify-content:space-between; margin-bottom:12px;">
             <div>
-              <h2 style="margin:0">Leaderboard</h2>
-              <div class="muted">Automatically ranks players and shows current winner.</div>
+              <h2 style="margin:0">📋 Live Round Board</h2>
+              <div class="subtle">Host can see who joined, who submitted, and the automatic scores after the round ends.</div>
             </div>
-            <div class="row">
-              <button id="recalcBtn" class="ghost">Recalculate</button>
-              <button id="exportBtn" class="ghost">Export CSV</button>
-              <button id="resetBoardBtn" class="warn">Reset Leaderboard</button>
+            <span id="roundInfoPill" class="pill warn">Round not started</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>👤 Player</th>
+                  <th>📨 Submission</th>
+                  <th>🙍 Name</th>
+                  <th>📍 Place</th>
+                  <th>📦 Thing</th>
+                  <th>🐾 Animal</th>
+                  <th>🧮 Round Score</th>
+                  <th>🏆 Total</th>
+                </tr>
+              </thead>
+              <tbody id="liveBoard"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+            <div>
+              <h2 style="margin:0">🏅 Leaderboard</h2>
+              <div class="subtle">Top players after automatic scoring.</div>
             </div>
           </div>
           <div class="leaderboard" id="podium"></div>
           <div class="table-wrap" style="margin-top:14px;">
             <table style="min-width:700px;">
               <thead>
-                <tr><th>Rank</th><th>Player</th><th>Total Score</th><th>Rounds Played</th><th>Average</th></tr>
+                <tr><th>🥇 Rank</th><th>👤 Player</th><th>🏆 Total Score</th><th>🎯 Rounds</th><th>📊 Average</th></tr>
               </thead>
               <tbody id="leaderTable"></tbody>
             </table>
@@ -220,287 +236,557 @@
         </div>
       </div>
     </div>
-    <div class="footer">If you want true multi-device join from one shared link, this prototype is the exact base to host on SharePoint / Azure Static Web Apps / any internal web server with live storage added.</div>
-  </div>
-<script>
-const allowed = ["ABINAYA FREDRICK", "Adhiayyappan Sampathkumar", "Athira Udayakumar", "Gowri Abhinaya Kalyan", "Jahnavi Tirumalasetty", "Jeganraj Senthilkumaran", "Krubasankar Umapathy", "Micheal Joseph Vaz S", "Mohamed Fazil S", "Mukesh kanna", "Nandhini J", "Navya P.", "Rajaraman Palaniappan", "Ranjith kumar", "Ratchagaraja Dhairiyasamy", "Sibi Sivavadivelu", "SIDDHARTH VIJAYAKUMAR", "Sivasubramaniyan s", "Sruthi Selvan", "Tamil M", "Ahmeddun Akbar Savanur", "Aparna P", "Arathi Sagayri", "Kavitha A O", "KOTHANDA RAJ IYAPPAN", "Megha Konana Manjunath", "PRAVIN JOSEPH", "Prem Kumar S", "Sagar Adithya Kumar", "Santhosh Kumar Bathrabagu", "Sharan Vottigunta", "Sheetal Goyal", "Siva Kumar Venkatachalam", "Swathi R", "Vigneshwaran G"];
-const state = {
-  activePlayers: [],
-  scores: {},
-  currentLetter: '?',
-  usedLetters: new Set(),
-  timerHandle: null,
-  timeLeft: 60,
-  paused: false,
-};
-const el = id => document.getElementById(id);
-const joinSelect = el('joinSelect');
-const availableList = el('availableList');
-const activeList = el('activeList');
-const scoreTable = el('scoreTable');
-const leaderTable = el('leaderTable');
-const podium = el('podium');
-const timeSelect = el('timeSelect');
-const roundNumber = el('roundNumber');
-const searchAvailable = el('searchAvailable');
-function initScores() {
-  allowed.forEach(name => {
-    if (!state.scores[name]) state.scores[name] = { total: 0, rounds: 0 };
-  });
-}
-function refreshJoinSelect() {
-  const available = allowed.filter(n => !state.activePlayers.includes(n));
-  joinSelect.innerHTML = available.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
-  if (!available.length) joinSelect.innerHTML = '<option>No more available names</option>';
-}
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-}
-function renderAvailable(filter='') {
-  const q = filter.trim().toLowerCase();
-  const names = allowed.filter(n => !state.activePlayers.includes(n) && n.toLowerCase().includes(q));
-  availableList.innerHTML = names.map(name => `
-    <div class="name-card">
-      <div><div>${escapeHtml(name)}</div><small>Available to join</small></div>
-      <button onclick="joinPlayer('${encodeURIComponent(name)}')">Join</button>
-    </div>`).join('') || '<div class="name-card"><div>No matching available names</div></div>';
-}
-function renderActive() {
-  el('activeCount').textContent = `${state.activePlayers.length} joined`;
-  activeList.innerHTML = state.activePlayers.map((name, idx) => `
-    <div class="name-card">
-      <div><div>${escapeHtml(name)}</div><small>Player #${idx+1}</small></div>
-      <button class="ghost" onclick="removePlayer('${encodeURIComponent(name)}')">Remove</button>
-    </div>`).join('') || '<div class="name-card"><div>No players joined yet</div></div>';
-}
-function renderScoreTable() {
-  scoreTable.innerHTML = state.activePlayers.map(name => `
-    <tr data-player="${escapeHtml(name)}">
-      <td><b>${escapeHtml(name)}</b></td>
-      <td><input placeholder="Name answer" class="ans ans-name" data-player="${escapeHtml(name)}" /></td>
-      <td><input placeholder="Place answer" class="ans ans-place" data-player="${escapeHtml(name)}" /></td>
-      <td><input placeholder="Thing answer" class="ans ans-thing" data-player="${escapeHtml(name)}" /></td>
-      <td><input type="number" value="0" class="autoTotal" data-player="${escapeHtml(name)}" readonly /></td>
-      <td><input type="number" value="0" class="bonus" data-player="${escapeHtml(name)}" min="0" max="50" /></td>
-      <td><input type="number" value="0" class="roundScore" data-player="${escapeHtml(name)}" readonly /></td>
-      <td><button onclick="commitScore('${encodeURIComponent(name)}')">Add Score</button></td>
-    </tr>
-    `).join('') || '<tr><td colspan="8" class="muted">No players joined yet</td></tr>';
-  bindScoringInputs();
-}
-function renderLeaderboard() {
-  const rows = allowed
-    .map(name => {
-      const s = state.scores[name] || {total:0, rounds:0};
-      return { name, total: s.total, rounds: s.rounds, avg: s.rounds ? (s.total / s.rounds) : 0 };
-    })
-    .filter(r => r.total > 0 || r.rounds > 0)
-    .sort((a,b) => b.total - a.total || b.avg - a.avg || a.name.localeCompare(b.name));
-  const top = [rows[0], rows[1], rows[2]].filter(Boolean);
-  const classes = ['gold', 'silver', 'bronze'];
-  const titles = ['Winner', 'Runner-up', 'Third place'];
-  podium.innerHTML = top.map((r,i) => `
-    <div class="leader ${classes[i]}">
-      <div>${titles[i]}</div>
-      <div style="font-size:1.1rem; font-weight:700; margin-top:8px;">${escapeHtml(r.name)}</div>
-      <div class="score">${r.total}</div>
-      <div>Rounds: ${r.rounds} • Avg: ${r.avg.toFixed(1)}</div>
+
+    <div class="footer">
+      If you open this file as-is, it runs in <span class="kbd">Broadcast</span> mode for same-browser tabs/windows on one device. To make it true multi-device, paste your Firebase config in the code block named <span class="kbd">FIREBASE_CONFIG</span> and host this HTML on a web server.
     </div>
-    `).join('') || '<div class="notice">No scores yet — add round scores to find the winner.</div>';
-  leaderTable.innerHTML = rows.map((r,i) => `
-    <tr>
-      <td>#${i+1}</td>
-      <td>${escapeHtml(r.name)}</td>
-      <td><b>${r.total}</b></td>
-      <td>${r.rounds}</td>
-      <td>${r.avg.toFixed(1)}</td>
-    </tr>
-    `).join('') || '<tr><td colspan="5" class="muted">No leaderboard data yet</td></tr>';
-}
-function joinPlayer(encodedName) {
-  const name = decodeURIComponent(encodedName);
-  if (!allowed.includes(name)) return;
-  if (state.activePlayers.includes(name)) return;
-  state.activePlayers.push(name);
-  refreshAll();
-}
-window.joinPlayer = joinPlayer;
-function removePlayer(encodedName) {
-  const name = decodeURIComponent(encodedName);
-  state.activePlayers = state.activePlayers.filter(n => n !== name);
-  refreshAll();
-}
-window.removePlayer = removePlayer;
-function refreshAll() {
-  refreshJoinSelect();
-  renderAvailable(searchAvailable.value || '');
-  renderActive();
-  renderScoreTable();
-  renderLeaderboard();
-}
-function bindScoringInputs() {
-  document.querySelectorAll('.ans, .bonus').forEach(inp => {
-    inp.addEventListener('input', () => updateRowScore(inp.dataset.player));
-  });
-}
-function getRow(player) {
-  return [...scoreTable.querySelectorAll('tr')].find(tr => tr.dataset.player === player);
-}
-function startsWithLetter(text, letter) {
-  if (!text || !letter || letter === '?') return false;
-  return text.trim().charAt(0).toUpperCase() === letter.toUpperCase();
-}
-function uniqueAmong(values, currentValue) {
-  const norm = currentValue.trim().toLowerCase();
-  if (!norm) return false;
-  const count = values.map(v => v.trim().toLowerCase()).filter(v => v === norm).length;
-  return count === 1;
-}
-function updateRowScore(player) {
-  const row = getRow(player);
-  if (!row) return;
-  const nameAns = row.querySelector('.ans-name').value;
-  const placeAns = row.querySelector('.ans-place').value;
-  const thingAns = row.querySelector('.ans-thing').value;
-  const bonus = parseInt(row.querySelector('.bonus').value || '0', 10) || 0;
-  const letter = state.currentLetter;
-  const allName = [...document.querySelectorAll('.ans-name')].map(x => x.value || '');
-  const allPlace = [...document.querySelectorAll('.ans-place')].map(x => x.value || '');
-  const allThing = [...document.querySelectorAll('.ans-thing')].map(x => x.value || '');
-  function scoreField(value, allValues) {
-    if (!value.trim()) return 0;
-    if (!startsWithLetter(value, letter)) return 0;
-    return uniqueAmong(allValues, value) ? 10 : 5;
-  }
-  const total = scoreField(nameAns, allName) + scoreField(placeAns, allPlace) + scoreField(thingAns, allThing);
-  row.querySelector('.autoTotal').value = total;
-  row.querySelector('.roundScore').value = total + bonus;
-}
-function commitScore(encodedName) {
-  const name = decodeURIComponent(encodedName);
-  const row = getRow(name);
-  if (!row) return;
-  updateRowScore(name);
-  const score = parseInt(row.querySelector('.roundScore').value || '0', 10) || 0;
-  state.scores[name].total += score;
-  state.scores[name].rounds += 1;
-  renderLeaderboard();
-}
-window.commitScore = commitScore;
-function clearRoundInputs() {
-  document.querySelectorAll('.ans').forEach(i => i.value = '');
-  document.querySelectorAll('.bonus').forEach(i => i.value = '0');
-  document.querySelectorAll('.autoTotal').forEach(i => i.value = '0');
-  document.querySelectorAll('.roundScore').forEach(i => i.value = '0');
-}
-function exportCsv() {
-  const rows = allowed.map(name => {
-    const s = state.scores[name] || {total:0, rounds:0};
-    return [name, s.total, s.rounds, s.rounds ? (s.total / s.rounds).toFixed(1) : '0.0'];
-  }).filter(r => r[1] > 0 || r[2] > 0);
-  const csv = [['Player','Total Score','Rounds Played','Average'], ...rows]
-    .map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))
-    .join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'name_place_thing_leaderboard.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-function randomLetter() {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  const available = letters.filter(l => !state.usedLetters.has(l));
-  if (!available.length) state.usedLetters.clear();
-  const pool = letters.filter(l => !state.usedLetters.has(l));
-  const chosen = pool[Math.floor(Math.random() * pool.length)];
-  state.usedLetters.add(chosen);
-  return chosen;
-}
-function spinLetter() {
-  const target = el('letter');
-  let steps = 18;
-  target.classList.add('pulse');
-  el('spinStatus').textContent = 'Spinning...';
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  const handle = setInterval(() => {
-    target.textContent = letters[Math.floor(Math.random() * letters.length)];
-    steps -= 1;
-    if (steps <= 0) {
-      clearInterval(handle);
-      state.currentLetter = randomLetter();
-      target.textContent = state.currentLetter;
-      target.classList.remove('pulse');
-      el('spinStatus').textContent = `Round letter: ${state.currentLetter}`;
-      document.querySelectorAll('.ans').forEach(inp => updateRowScore(inp.dataset.player));
+  </div>
+
+  <script type="module">
+    const allowed = [
+      "ABINAYA FREDRICK", "Adhiayyappan Sampathkumar", "Athira Udayakumar", "Gowri Abhinaya Kalyan", "Jahnavi Tirumalasetty",
+      "Jeganraj Senthilkumaran", "Krubasankar Umapathy", "Micheal Joseph Vaz S", "Mohamed Fazil S", "Mukesh kanna",
+      "Nandhini J", "Navya P.", "Rajaraman Palaniappan", "Ranjith kumar", "Ratchagaraja Dhairiyasamy",
+      "Sibi Sivavadivelu", "SIDDHARTH VIJAYAKUMAR", "Sivasubramaniyan s", "Sruthi Selvan", "Tamil M",
+      "Ahmeddun Akbar Savanur", "Aparna P", "Arathi Sagayri", "Kavitha A O", "KOTHANDA RAJ IYAPPAN",
+      "Megha Konana Manjunath", "PRAVIN JOSEPH", "Prem Kumar S", "Sagar Adithya Kumar", "Santhosh Kumar Bathrabagu",
+      "Sharan Vottigunta", "Sheetal Goyal", "Siva Kumar Venkatachalam", "Swathi R", "Vigneshwaran G"
+    ];
+
+    // -----------------------------
+    // OPTIONAL TRUE MULTI-DEVICE MODE
+    // Paste your Firebase project config below.
+    // If left empty, the file runs in Broadcast mode (same device, multiple tabs/windows).
+    // -----------------------------
+    const FIREBASE_CONFIG = {
+      apiKey: "",
+      authDomain: "",
+      databaseURL: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
+    const el = id => document.getElementById(id);
+    const nameSelect = el('nameSelect');
+    const roleSelect = el('roleSelect');
+    const roomIdInput = el('roomId');
+    const backendNotice = el('backendNotice');
+    const syncModeBox = el('syncModeBox');
+    const syncModeDesc = el('syncModeDesc');
+    const playersList = el('playersList');
+    const roomMeta = el('roomMeta');
+    const phasePill = el('phasePill');
+    const hostControls = el('hostControls');
+    const letterBox = el('letterBox');
+    const letterStatus = el('letterStatus');
+    const timerBox = el('timerBox');
+    const timerStatus = el('timerStatus');
+    const submitStatus = el('submitStatus');
+    const roundInfoPill = el('roundInfoPill');
+    const liveBoard = el('liveBoard');
+    const podium = el('podium');
+    const leaderTable = el('leaderTable');
+    const ansName = el('ansName');
+    const ansPlace = el('ansPlace');
+    const ansThing = el('ansThing');
+    const ansAnimal = el('ansAnimal');
+    const hostRoundTime = el('hostRoundTime');
+    const hostRoundNumber = el('hostRoundNumber');
+    const hostRoundNote = el('hostRoundNote');
+
+    allowed.forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n;
+      opt.textContent = n;
+      nameSelect.appendChild(opt);
+    });
+    nameSelect.value = 'Ratchagaraja Dhairiyasamy';
+
+    roleSelect.addEventListener('change', () => {
+      if (roleSelect.value === 'host') nameSelect.value = 'Ratchagaraja Dhairiyasamy';
+    });
+
+    const localSession = {
+      roomId: '',
+      role: 'player',
+      myName: '',
+      connected: false,
+      backend: null,
+      roomState: null,
+      tickHandle: null,
+      firebaseReady: false,
+      firebaseRefs: null
+    };
+
+    function escapeHtml(str){
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
-  }, 80);
-}
-function setTimerDisplay() { el('timer').textContent = state.timeLeft; }
-function stopTimer() { if (state.timerHandle) clearInterval(state.timerHandle); state.timerHandle = null; }
-function startTimer() {
-  stopTimer();
-  state.paused = false;
-  state.timeLeft = parseInt(timeSelect.value, 10);
-  setTimerDisplay();
-  el('timerStatus').textContent = 'Round running';
-  state.timerHandle = setInterval(() => {
-    if (state.paused) return;
-    state.timeLeft -= 1;
-    setTimerDisplay();
-    if (state.timeLeft <= 0) {
-      stopTimer();
-      el('timerStatus').textContent = 'Time is up!';
-      alert('Time is up! Scoring can begin.');
+
+    function playerKey(name){
+      return encodeURIComponent(name);
     }
-  }, 1000);
-}
-function resetRound() {
-  stopTimer();
-  state.paused = false;
-  state.timeLeft = parseInt(timeSelect.value, 10);
-  setTimerDisplay();
-  el('timerStatus').textContent = 'Timer ready';
-  el('letter').textContent = '?';
-  state.currentLetter = '?';
-  el('spinStatus').textContent = 'Spin a new letter for the round';
-  clearRoundInputs();
-  el('pauseBtn').textContent = 'Pause';
-}
-function quickScore() {
-  document.querySelectorAll('.ans-name, .ans-place, .ans-thing, .bonus').forEach(inp => updateRowScore(inp.dataset.player));
-}
-el('joinBtn').addEventListener('click', () => {
-  if (!joinSelect.value || joinSelect.value === 'No more available names') return;
-  joinPlayer(encodeURIComponent(joinSelect.value));
-});
-el('clearPlayersBtn').addEventListener('click', () => { state.activePlayers = []; refreshAll(); });
-el('spinBtn').addEventListener('click', spinLetter);
-el('roundBtn').addEventListener('click', () => { spinLetter(); setTimeout(startTimer, 1500); });
-el('pauseBtn').addEventListener('click', () => {
-  if (!state.timerHandle) return;
-  state.paused = !state.paused;
-  el('pauseBtn').textContent = state.paused ? 'Resume' : 'Pause';
-  el('timerStatus').textContent = state.paused ? 'Paused' : 'Round running';
-});
-el('resetBtn').addEventListener('click', resetRound);
-el('autoScoreBtn').addEventListener('click', quickScore);
-el('clearRoundBtn').addEventListener('click', clearRoundInputs);
-el('recalcBtn').addEventListener('click', renderLeaderboard);
-el('exportBtn').addEventListener('click', exportCsv);
-el('resetBoardBtn').addEventListener('click', () => {
-  allowed.forEach(n => state.scores[n] = { total:0, rounds:0 });
-  renderLeaderboard();
-});
-timeSelect.addEventListener('change', () => { if (!state.timerHandle) { state.timeLeft = parseInt(timeSelect.value,10); setTimerDisplay(); } });
-searchAvailable.addEventListener('input', e => renderAvailable(e.target.value));
-initScores();
-state.timeLeft = parseInt(timeSelect.value,10);
-setTimerDisplay();
-refreshAll();
-</script>
+
+    function defaultRoomState(roomId, hostName){
+      return {
+        roomId,
+        hostName,
+        phase: 'lobby',
+        roundNumber: 1,
+        roundNote: '',
+        currentLetter: '?',
+        roundDuration: 60,
+        roundEndsAt: null,
+        lastScoredRound: 0,
+        updatedAt: Date.now(),
+        players: {}
+      };
+    }
+
+    function ensurePlayerEntry(state, name){
+      const key = playerKey(name);
+      if (!state.players[key]) {
+        state.players[key] = {
+          key,
+          name,
+          joinedAt: Date.now(),
+          online: true,
+          submittedRound: 0,
+          answers: { name:'', place:'', thing:'', animal:'' },
+          roundScore: 0,
+          totalScore: 0,
+          roundsPlayed: 0
+        };
+      }
+      state.players[key].name = name;
+      state.players[key].online = true;
+      return key;
+    }
+
+    function randomLetter(){
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      return letters[Math.floor(Math.random() * letters.length)];
+    }
+
+    function hasFirebaseConfig(){
+      return !!(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.appId && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.databaseURL);
+    }
+
+    function setByPath(obj, path, value){
+      const parts = path.split('/');
+      let cur = obj;
+      for(let i=0;i<parts.length-1;i++){
+        if (typeof cur[parts[i]] !== 'object' || cur[parts[i]] === null) cur[parts[i]] = {};
+        cur = cur[parts[i]];
+      }
+      cur[parts[parts.length-1]] = value;
+    }
+
+    function createBroadcastBackend(roomId){
+      const storageKey = `npta-mp-room-${roomId}`;
+      const channel = new BroadcastChannel(storageKey);
+      let subscriber = () => {};
+
+      const read = () => {
+        const raw = localStorage.getItem(storageKey);
+        return raw ? JSON.parse(raw) : null;
+      };
+
+      const write = (state) => {
+        state.updatedAt = Date.now();
+        localStorage.setItem(storageKey, JSON.stringify(state));
+        channel.postMessage({ type:'sync', state });
+      };
+
+      channel.onmessage = ev => {
+        if (ev.data?.type === 'sync') subscriber(ev.data.state);
+      };
+
+      window.addEventListener('storage', ev => {
+        if (ev.key === storageKey && ev.newValue) subscriber(JSON.parse(ev.newValue));
+      });
+
+      return {
+        mode: 'broadcast',
+        async init(){},
+        subscribe(cb){ subscriber = cb; const existing = read(); if (existing) cb(existing); },
+        async create(initialState){ write(initialState); },
+        async patch(pathValues){ const state = read() || {}; Object.entries(pathValues).forEach(([p,v]) => setByPath(state,p,v)); write(state); },
+        async replace(newState){ write(newState); },
+        async get(){ return read(); },
+        close(){ channel.close(); }
+      };
+    }
+
+    async function createFirebaseBackend(roomId){
+      const appMod = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+      const dbMod = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js');
+      const app = appMod.initializeApp(FIREBASE_CONFIG);
+      const db = dbMod.getDatabase(app);
+      const roomRef = dbMod.ref(db, `nptaRooms/${roomId}`);
+      return {
+        mode:'firebase',
+        async init(){},
+        subscribe(cb){ dbMod.onValue(roomRef, snap => { if (snap.exists()) cb(snap.val()); }); },
+        async create(initialState){ await dbMod.set(roomRef, initialState); },
+        async patch(pathValues){ await dbMod.update(roomRef, pathValues); },
+        async replace(newState){ await dbMod.set(roomRef, newState); },
+        async get(){ const snap = await dbMod.get(roomRef); return snap.exists() ? snap.val() : null; },
+        close(){}
+      };
+    }
+
+    async function buildBackend(roomId){
+      if (hasFirebaseConfig()) {
+        try { return await createFirebaseBackend(roomId); }
+        catch (err) { console.error('Firebase init failed, falling back to broadcast mode.', err); }
+      }
+      return createBroadcastBackend(roomId);
+    }
+
+    function updateBackendNotice(mode){
+      if (mode === 'firebase') {
+        backendNotice.className = 'notice';
+        backendNotice.innerHTML = '<b>True multi-device mode is active.</b> Players on different laptops/phones can join the same room ID and sync in real time.';
+        syncModeBox.textContent = 'Firebase';
+        syncModeDesc.textContent = 'Different devices supported';
+      } else {
+        backendNotice.className = 'warning';
+        backendNotice.innerHTML = '<b>Broadcast mode is active.</b> This works immediately for the same browser on one device (multiple tabs/windows). For different devices, paste your Firebase config at the top of this file and host it.';
+        syncModeBox.textContent = 'Broadcast';
+        syncModeDesc.textContent = 'Same device tabs/windows';
+      }
+    }
+
+    function joinedPlayersArray(state){
+      return Object.values(state?.players || {}).sort((a,b)=>a.joinedAt-b.joinedAt || a.name.localeCompare(b.name));
+    }
+
+    function currentPlayer(state){
+      const key = playerKey(localSession.myName || '');
+      return state?.players?.[key] || null;
+    }
+
+    function syncAnswerInputsFromState(state){
+      const me = currentPlayer(state);
+      if (!me) return;
+      ansName.value = me.answers?.name || '';
+      ansPlace.value = me.answers?.place || '';
+      ansThing.value = me.answers?.thing || '';
+      ansAnimal.value = me.answers?.animal || '';
+      const submitted = Number(me.submittedRound || 0) === Number(state.roundNumber || 0) && state.phase !== 'lobby';
+      submitStatus.textContent = submitted ? 'Submitted' : 'Not submitted';
+      submitStatus.className = submitted ? 'pill ok' : 'pill';
+    }
+
+    function scoreField(value, allValues, letter){
+      const clean = (value || '').trim();
+      if (!clean) return 0;
+      if (!letter || letter === '?' || clean.charAt(0).toUpperCase() !== letter.toUpperCase()) return 0;
+      const norm = clean.toLowerCase();
+      const count = allValues.map(v => (v || '').trim().toLowerCase()).filter(v => v === norm).length;
+      return count === 1 ? 10 : 5;
+    }
+
+    function buildScoredState(state){
+      const clone = JSON.parse(JSON.stringify(state));
+      const players = joinedPlayersArray(clone);
+      const rn = Number(clone.roundNumber || 1);
+      const letter = clone.currentLetter;
+      const allNames = players.map(p => p.answers?.name || '');
+      const allPlaces = players.map(p => p.answers?.place || '');
+      const allThings = players.map(p => p.answers?.thing || '');
+      const allAnimals = players.map(p => p.answers?.animal || '');
+
+      players.forEach(p => {
+        const roundScore =
+          scoreField(p.answers?.name, allNames, letter) +
+          scoreField(p.answers?.place, allPlaces, letter) +
+          scoreField(p.answers?.thing, allThings, letter) +
+          scoreField(p.answers?.animal, allAnimals, letter);
+        p.roundScore = roundScore;
+        const alreadyCounted = Number(p.roundsPlayed || 0) >= rn && Number(clone.lastScoredRound || 0) >= rn;
+        if (!alreadyCounted) {
+          p.totalScore = Number(p.totalScore || 0) + roundScore;
+          p.roundsPlayed = Math.max(Number(p.roundsPlayed || 0), rn);
+        }
+      });
+
+      clone.players = Object.fromEntries(players.map(p => [p.key, p]));
+      clone.lastScoredRound = rn;
+      clone.phase = 'results';
+      clone.roundEndsAt = null;
+      clone.updatedAt = Date.now();
+      return clone;
+    }
+
+    async function autoEndRoundIfNeeded(){
+      const state = localSession.roomState;
+      if (!state || localSession.role !== 'host') return;
+      if (state.phase !== 'playing' || !state.roundEndsAt) return;
+      if (Date.now() < Number(state.roundEndsAt)) return;
+      if (Number(state.lastScoredRound || 0) >= Number(state.roundNumber || 0)) return;
+      const scored = buildScoredState(state);
+      await localSession.backend.replace(scored);
+    }
+
+    function renderPlayers(state){
+      const players = joinedPlayersArray(state);
+      playersList.innerHTML = players.length
+        ? players.map(p => `<div class="player-row"><div><div><b>${escapeHtml(p.name)}</b>${state.hostName === p.name ? ' <span class="kbd">HOST</span>' : ''}</div><div class="tiny">Joined</div></div><div>${Number(p.submittedRound||0) === Number(state.roundNumber||0) && state.phase !== 'lobby' ? '<span class="pill ok">Submitted</span>' : '<span class="pill warn">Waiting</span>'}</div></div>`).join('')
+        : '<div class="player-row"><div>No players joined yet</div></div>';
+    }
+
+    function renderRoundAndTimer(state){
+      letterBox.textContent = state.currentLetter || '?';
+      phasePill.textContent = state.phase === 'playing' ? 'Playing' : state.phase === 'results' ? 'Results' : 'Lobby';
+      phasePill.className = state.phase === 'playing' ? 'pill ok' : state.phase === 'results' ? 'pill' : 'pill warn';
+      roundInfoPill.textContent = state.phase === 'lobby'
+        ? 'Round not started'
+        : `Round ${state.roundNumber} • ${state.roundNote ? state.roundNote : 'Live'}`;
+      roundInfoPill.className = state.phase === 'playing' ? 'pill ok' : 'pill warn';
+
+      if (state.phase === 'lobby') {
+        letterStatus.textContent = 'Host will start the game';
+        timerBox.textContent = '--';
+        timerStatus.textContent = 'Waiting in lobby';
+        return;
+      }
+
+      letterStatus.textContent = `Round letter: ${state.currentLetter}`;
+      if (state.phase === 'playing' && state.roundEndsAt) {
+        const left = Math.max(0, Math.ceil((Number(state.roundEndsAt) - Date.now()) / 1000));
+        timerBox.textContent = left;
+        timerStatus.textContent = left > 0 ? 'Round running' : 'Ending...';
+      } else {
+        timerBox.textContent = '0';
+        timerStatus.textContent = 'Round scored';
+      }
+    }
+
+    function renderLiveBoard(state){
+      const players = joinedPlayersArray(state);
+      liveBoard.innerHTML = players.length
+        ? players.map(p => `
+          <tr>
+            <td><b>${escapeHtml(p.name)}</b>${state.hostName === p.name ? ' <span class="kbd">HOST</span>' : ''}</td>
+            <td>${Number(p.submittedRound||0) === Number(state.roundNumber||0) && state.phase !== 'lobby' ? '<span class="pill ok">Submitted</span>' : '<span class="pill warn">Pending</span>'}</td>
+            <td>${escapeHtml(p.answers?.name || '')}</td>
+            <td>${escapeHtml(p.answers?.place || '')}</td>
+            <td>${escapeHtml(p.answers?.thing || '')}</td>
+            <td>${escapeHtml(p.answers?.animal || '')}</td>
+            <td><b>${Number(p.roundScore || 0)}</b></td>
+            <td>${Number(p.totalScore || 0)}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="8" class="subtle">No players joined yet</td></tr>';
+    }
+
+    function renderLeaderboard(state){
+      const rows = joinedPlayersArray(state)
+        .map(p => ({ name: p.name, total: Number(p.totalScore||0), rounds: Number(p.roundsPlayed||0), avg: Number(p.roundsPlayed||0) ? Number(p.totalScore||0)/Number(p.roundsPlayed||0) : 0 }))
+        .sort((a,b) => (b.total-a.total) || (b.avg-a.avg) || a.name.localeCompare(b.name));
+
+      const top = [rows[0], rows[1], rows[2]].filter(Boolean);
+      const classes = ['gold','silver','bronze'];
+      const titles = ['Winner','Runner-up','Third place'];
+      podium.innerHTML = top.length
+        ? top.map((r,i)=>`<div class="leader ${classes[i]}"><div>${titles[i]}</div><div style="font-size:1.08rem; font-weight:700; margin-top:8px;">${escapeHtml(r.name)}</div><div class="score">${r.total}</div><div>Rounds: ${r.rounds} • Avg: ${r.avg.toFixed(1)}</div></div>`).join('')
+        : '<div class="notice">No scores yet — host should start a round first.</div>';
+
+      leaderTable.innerHTML = rows.length
+        ? rows.map((r,i)=>`<tr><td>#${i+1}</td><td>${escapeHtml(r.name)}</td><td><b>${r.total}</b></td><td>${r.rounds}</td><td>${r.avg.toFixed(1)}</td></tr>`).join('')
+        : '<tr><td colspan="5" class="subtle">No leaderboard data yet</td></tr>';
+    }
+
+    function lockInputsForPhase(state){
+      const me = currentPlayer(state);
+      const canEdit = !!me && state.phase === 'playing' && Date.now() < Number(state.roundEndsAt || 0);
+      [ansName, ansPlace, ansThing, ansAnimal].forEach(i => i.disabled = !canEdit);
+      el('saveAnswersBtn').disabled = !canEdit;
+    }
+
+    function render(state){
+      localSession.roomState = state;
+      renderPlayers(state);
+      renderRoundAndTimer(state);
+      renderLiveBoard(state);
+      renderLeaderboard(state);
+      syncAnswerInputsFromState(state);
+      lockInputsForPhase(state);
+      const connectedText = localSession.connected
+        ? `${localSession.role === 'host' ? 'Host' : 'Player'}: ${localSession.myName} • Room: ${state.roomId} • Backend: ${localSession.backend.mode}`
+        : 'Not connected';
+      roomMeta.textContent = connectedText;
+      hostControls.classList.toggle('hidden', !(localSession.connected && localSession.role === 'host'));
+      if (localSession.role === 'host') {
+        hostRoundNumber.value = state.roundNumber || 1;
+      }
+    }
+
+    function startTicking(){
+      stopTicking();
+      localSession.tickHandle = setInterval(async () => {
+        if (localSession.roomState) {
+          renderRoundAndTimer(localSession.roomState);
+          await autoEndRoundIfNeeded();
+        }
+      }, 250);
+    }
+
+    function stopTicking(){
+      if (localSession.tickHandle) clearInterval(localSession.tickHandle);
+      localSession.tickHandle = null;
+    }
+
+    async function connectRoom(){
+      const roomId = roomIdInput.value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g,'').slice(0,30) || 'TEAMGAME';
+      const role = roleSelect.value;
+      const myName = nameSelect.value;
+      if (role === 'host' && myName !== 'Ratchagaraja Dhairiyasamy') {
+        alert('Host is locked to Ratchagaraja Dhairiyasamy in this file.');
+        nameSelect.value = 'Ratchagaraja Dhairiyasamy';
+        return;
+      }
+
+      if (localSession.backend) localSession.backend.close();
+      localSession.backend = await buildBackend(roomId);
+      updateBackendNotice(localSession.backend.mode);
+      localSession.roomId = roomId;
+      localSession.role = role;
+      localSession.myName = myName;
+      localSession.connected = true;
+
+      localSession.backend.subscribe(state => {
+        if (!state) return;
+        render(state);
+      });
+
+      const existing = await localSession.backend.get();
+      if (!existing) {
+        if (role !== 'host') {
+          alert('Room not found. Ask the host to create the room first.');
+          localSession.connected = false;
+          roomMeta.textContent = 'Room not found';
+          return;
+        }
+        const initial = defaultRoomState(roomId, myName);
+        ensurePlayerEntry(initial, myName);
+        await localSession.backend.create(initial);
+      } else {
+        const clone = JSON.parse(JSON.stringify(existing));
+        ensurePlayerEntry(clone, myName);
+        if (role === 'host') clone.hostName = myName;
+        await localSession.backend.replace(clone);
+      }
+
+      startTicking();
+    }
+
+    async function leaveRoom(){
+      if (!localSession.connected || !localSession.backend) return;
+      const state = await localSession.backend.get();
+      if (state?.players?.[playerKey(localSession.myName)]) {
+        const clone = JSON.parse(JSON.stringify(state));
+        delete clone.players[playerKey(localSession.myName)];
+        if (clone.hostName === localSession.myName) clone.hostName = '';
+        await localSession.backend.replace(clone);
+      }
+      if (localSession.backend) localSession.backend.close();
+      localSession.connected = false;
+      localSession.roomState = null;
+      stopTicking();
+      roomMeta.textContent = 'Not connected';
+      playersList.innerHTML = '<div class="player-row"><div>No players joined yet</div></div>';
+      liveBoard.innerHTML = '<tr><td colspan="8" class="subtle">Join a room to start.</td></tr>';
+      leaderTable.innerHTML = '<tr><td colspan="5" class="subtle">No leaderboard data yet</td></tr>';
+      podium.innerHTML = '<div class="notice">Join a room to start the game.</div>';
+      letterBox.textContent = '?'; timerBox.textContent = '--';
+      letterStatus.textContent = 'Host will start the game'; timerStatus.textContent = 'Waiting in lobby';
+      hostControls.classList.add('hidden');
+    }
+
+    async function saveAnswers(){
+      const state = localSession.roomState;
+      if (!state || state.phase !== 'playing') return;
+      if (Date.now() >= Number(state.roundEndsAt || 0)) return;
+      const key = playerKey(localSession.myName);
+      const patch = {};
+      patch[`players/${key}/answers/name`] = ansName.value.trim();
+      patch[`players/${key}/answers/place`] = ansPlace.value.trim();
+      patch[`players/${key}/answers/thing`] = ansThing.value.trim();
+      patch[`players/${key}/answers/animal`] = ansAnimal.value.trim();
+      patch[`players/${key}/submittedRound`] = Number(state.roundNumber || 1);
+      patch[`players/${key}/online`] = true;
+      patch['updatedAt'] = Date.now();
+      await localSession.backend.patch(patch);
+    }
+
+    async function startRound(){
+      const state = localSession.roomState;
+      if (!state || localSession.role !== 'host') return;
+      const nextRound = Number(hostRoundNumber.value || state.roundNumber || 1);
+      const duration = Number(hostRoundTime.value || 60);
+      const note = hostRoundNote.value.trim();
+      const startAt = Date.now();
+      const endAt = startAt + duration * 1000;
+      const clone = JSON.parse(JSON.stringify(state));
+      clone.phase = 'playing';
+      clone.roundNumber = nextRound;
+      clone.roundDuration = duration;
+      clone.roundNote = note;
+      clone.currentLetter = randomLetter();
+      clone.roundEndsAt = endAt;
+      clone.updatedAt = Date.now();
+      Object.values(clone.players).forEach(p => {
+        p.submittedRound = 0;
+        p.answers = { name:'', place:'', thing:'', animal:'' };
+        p.roundScore = 0;
+      });
+      await localSession.backend.replace(clone);
+    }
+
+    async function endRoundNow(){
+      const state = localSession.roomState;
+      if (!state || localSession.role !== 'host') return;
+      const scored = buildScoredState(state);
+      await localSession.backend.replace(scored);
+    }
+
+    async function resetRoom(){
+      const state = localSession.roomState;
+      if (!state || localSession.role !== 'host') return;
+      const reset = defaultRoomState(state.roomId, localSession.myName);
+      joinedPlayersArray(state).forEach(p => {
+        reset.players[p.key] = {
+          key:p.key, name:p.name, joinedAt:p.joinedAt || Date.now(), online:true,
+          submittedRound:0, answers:{name:'',place:'',thing:'',animal:''}, roundScore:0, totalScore:0, roundsPlayed:0
+        };
+      });
+      await localSession.backend.replace(reset);
+    }
+
+    el('joinRoomBtn').addEventListener('click', connectRoom);
+    el('leaveRoomBtn').addEventListener('click', leaveRoom);
+    el('saveAnswersBtn').addEventListener('click', saveAnswers);
+    el('startRoundBtn').addEventListener('click', startRound);
+    el('endRoundBtn').addEventListener('click', endRoundNow);
+    el('resetRoomBtn').addEventListener('click', resetRoom);
+
+    [ansName, ansPlace, ansThing, ansAnimal].forEach(inp => inp.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter') saveAnswers();
+    }));
+
+    // Initial UI state
+    updateBackendNotice('broadcast');
+    playersList.innerHTML = '<div class="player-row"><div>No players joined yet</div></div>';
+    liveBoard.innerHTML = '<tr><td colspan="8" class="subtle">Join a room to start.</td></tr>';
+    leaderTable.innerHTML = '<tr><td colspan="5" class="subtle">No leaderboard data yet</td></tr>';
+    podium.innerHTML = '<div class="notice">Join a room to start the game.</div>';
+    [ansName, ansPlace, ansThing, ansAnimal].forEach(i => i.disabled = true);
+    el('saveAnswersBtn').disabled = true;
+  </script>
 </body>
 </html>
